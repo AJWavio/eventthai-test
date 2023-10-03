@@ -64,7 +64,7 @@ module.exports = {
       }
     }],
     'prettier/prettier': 'off',
-    // 'no-unused-vars': 'off',
+    'no-unused-vars': 'off',
     //#endregion
   },
 };
