@@ -12,7 +12,8 @@ export const routesV1 = {
     country: {
         root: countryRoot,
         getAll: countryRoot,
-        qeury: `/${countryRoot}/query`,
+        queryName: `/${countryRoot}/:name`,
+        queryCode: `/${countryRoot}/code/:code`,
     },
     user: {
         root: userRoot,

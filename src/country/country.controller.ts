@@ -18,10 +18,8 @@ import {
     getResponseCreatedDateString,
     getResponseId,
 } from 'src/_util/response.util';
-import { CountryGetReqDto } from './dto/req/country.get.req.dto';
 import { CountryGetOneResDto } from './dto/res/country.get-one.res.dto';
 import { CountryQueryInvalidException } from './_exceptions/country.query-invalid.exception';
-import { CountryQuery } from './database/country.query';
 import { routesV1 } from 'src/config/route.config';
 
 @Controller()
@@ -57,7 +55,7 @@ export class CountryController {
         }
     }
 
-    @Get(routesV1.country.qeury)
+    @Get(routesV1.country.queryName)
     @ApiOkResponse({
         type: CountryGetOneResDto,
         status: 200,
@@ -71,23 +69,58 @@ export class CountryController {
     @ApiNotFoundResponse({
         status: 404,
     })
-    async handleGetCountryQuery(
-        @Query() getDto: CountryGetReqDto,
+    async handleGetCountryByName(
+        @Query('name') countryName: string,
     ): Promise<CountryGetOneResDto> {
         try {
-            const { countryCode, countryName } = getDto;
-
-            if (countryName == null && countryCode == null) {
+            if (countryName == null) {
                 throw new CountryQueryInvalidException();
             }
 
-            const countryQuery: CountryQuery = {
-                countryCode,
+            const countryViewModel = await this.countryService.getCountryByName(
                 countryName,
+            );
+
+            if (!countryViewModel) throw new NotFoundException();
+
+            const response: CountryGetOneResDto = {
+                countryData: countryViewModel,
+                createdAt: getResponseCreatedDateString(),
+                id: getResponseId(),
             };
 
-            const countryViewModel = await this.countryService.getCountryQuery(
-                countryQuery,
+            return response;
+        } catch (error) {
+            if (error instanceof HttpException) throw error;
+
+            throw new InternalServerErrorException(error);
+        }
+    }
+
+    @Get(routesV1.country.queryCode)
+    @ApiOkResponse({
+        type: CountryGetOneResDto,
+        status: 200,
+    })
+    @ApiBadRequestResponse({
+        status: 400,
+    })
+    @ApiInternalServerErrorResponse({
+        status: 500,
+    })
+    @ApiNotFoundResponse({
+        status: 404,
+    })
+    async handleGetCountryByCode(
+        @Query('code') countryCode: string,
+    ): Promise<CountryGetOneResDto> {
+        try {
+            if (countryCode == null) {
+                throw new CountryQueryInvalidException();
+            }
+
+            const countryViewModel = await this.countryService.getCountryByCode(
+                countryCode,
             );
 
             if (!countryViewModel) throw new NotFoundException();

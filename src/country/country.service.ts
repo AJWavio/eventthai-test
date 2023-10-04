@@ -4,7 +4,6 @@ import {
     COUNTRY_REPO_PROVIDER_TOKEN,
     CountryRepository,
 } from './database/country.repository';
-import { CountryQuery } from './database/country.query';
 import { Country } from './database/country';
 
 @Injectable()
@@ -30,31 +29,33 @@ export class CountryService {
         return countryViewModelList;
     }
 
-    async getCountryQuery(
-        countryQuery: CountryQuery,
+    async getCountryByCode(
+        countryCode: string,
     ): Promise<CountryViewModel | null> {
-        const { countryCode, countryName } = countryQuery;
-
-        const countryDoc: Country | null = await this.countryRepository.findOne(
-            {
-                $or: [
-                    {
-                        code: countryCode,
-                    },
-                    {
-                        name: countryName,
-                    },
-                ],
-            },
-        );
+        const countryDoc: Country | null =
+            await this.countryRepository.findOneByCode(countryCode);
 
         if (!countryDoc) return null;
 
-        const { code, name } = countryDoc;
+        const countryViewModel: CountryViewModel = {
+            countryCode: countryDoc.code,
+            countryName: countryDoc.name,
+        };
+
+        return countryViewModel;
+    }
+
+    async getCountryByName(
+        countryName: string,
+    ): Promise<CountryViewModel | null> {
+        const countryDoc: Country | null =
+            await this.countryRepository.findOneByName(countryName);
+
+        if (!countryDoc) return null;
 
         const countryViewModel: CountryViewModel = {
-            countryCode: code,
-            countryName: name,
+            countryCode: countryDoc.code,
+            countryName: countryDoc.name,
         };
 
         return countryViewModel;
