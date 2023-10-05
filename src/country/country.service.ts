@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CountryViewModel } from './dto/country.view-model';
+import { CountryDto } from './dto/country.dto';
 import {
     COUNTRY_REPO_PROVIDER_TOKEN,
     CountryRepository,
@@ -13,51 +13,47 @@ export class CountryService {
         private readonly countryRepository: CountryRepository,
     ) {}
 
-    async getAllCountry(): Promise<CountryViewModel[]> {
-        const countryViewModelList: CountryViewModel[] = [];
+    async getAllCountry(): Promise<CountryDto[]> {
+        const countryDtoList: CountryDto[] = [];
         const countryDocList = await this.countryRepository.findAll();
 
         for (const countryDoc of countryDocList) {
             const { code, name } = countryDoc;
 
-            countryViewModelList.push({
+            countryDtoList.push({
                 countryCode: code,
                 countryName: name,
             });
         }
 
-        return countryViewModelList;
+        return countryDtoList;
     }
 
-    async getCountryByCode(
-        countryCode: string,
-    ): Promise<CountryViewModel | null> {
+    async getCountryByCode(countryCode: string): Promise<CountryDto | null> {
         const countryDoc: Country | null =
             await this.countryRepository.findOneByCode(countryCode);
 
         if (!countryDoc) return null;
 
-        const countryViewModel: CountryViewModel = {
+        const countryDto: CountryDto = {
             countryCode: countryDoc.code,
             countryName: countryDoc.name,
         };
 
-        return countryViewModel;
+        return countryDto;
     }
 
-    async getCountryByName(
-        countryName: string,
-    ): Promise<CountryViewModel | null> {
+    async getCountryByName(countryName: string): Promise<CountryDto | null> {
         const countryDoc: Country | null =
             await this.countryRepository.findOneByName(countryName);
 
         if (!countryDoc) return null;
 
-        const countryViewModel: CountryViewModel = {
+        const countryDto: CountryDto = {
             countryCode: countryDoc.code,
             countryName: countryDoc.name,
         };
 
-        return countryViewModel;
+        return countryDto;
     }
 }

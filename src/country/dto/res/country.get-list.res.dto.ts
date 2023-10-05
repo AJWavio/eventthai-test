@@ -1,11 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CountryViewModel } from '../country.view-model';
+import { CountryDto } from '../country.dto';
 import { ResponseBase } from 'src/_dto/response.dto.base';
 
 export class CountryGetListResDto extends ResponseBase {
     @ApiProperty({
         description: 'List of country\'s data',
-        type: Array<CountryViewModel>,
+        type: Array<CountryDto>,
         example: [
             {
                 countryName: 'Thailand',
@@ -15,7 +15,7 @@ export class CountryGetListResDto extends ResponseBase {
                 countryName: 'England',
                 countryCode: 'EN',
             },
-        ] as Array<CountryViewModel>,
+        ] as Array<CountryDto>,
     })
-    readonly countryDataList: Array<CountryViewModel>;
+    readonly countryDataList: Array<CountryDto>;
 }

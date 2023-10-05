@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CountryViewModel {
+export class CountryDto {
     @ApiProperty({
         description: 'Name of the country',
         example: 'Thailand',

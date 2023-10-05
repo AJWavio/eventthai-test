@@ -6,5 +6,6 @@ import { CountryRepositoryProvider } from './database/country.repository';
 @Module({
     controllers: [CountryController],
     providers: [CountryService, CountryRepositoryProvider],
+    exports: [CountryRepositoryProvider],
 })
 export class CountryModule {}

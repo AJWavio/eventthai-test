@@ -15,12 +15,12 @@ import {
 } from '@nestjs/swagger';
 import { CountryService } from './country.service';
 import {
-    getResponseCreatedDateString,
+    getResponseCreatedAtString,
     getResponseId,
 } from 'src/_util/response.util';
 import { CountryGetOneResDto } from './dto/res/country.get-one.res.dto';
 import { CountryQueryInvalidException } from './_exceptions/country.query-invalid.exception';
-import { routesV1 } from 'src/config/route.config';
+import { routesV1 } from 'src/_config/route.config';
 
 @Controller()
 export class CountryController {
@@ -39,11 +39,10 @@ export class CountryController {
     })
     async handleGetAllCountry(): Promise<CountryGetListResDto> {
         try {
-            const countryViewModelList =
-                await this.countryService.getAllCountry();
+            const countryDtoList = await this.countryService.getAllCountry();
             const response: CountryGetListResDto = {
-                countryDataList: countryViewModelList,
-                createdAt: getResponseCreatedDateString(),
+                countryDataList: countryDtoList,
+                createdAt: getResponseCreatedAtString(),
                 id: getResponseId(),
             };
 
@@ -77,15 +76,15 @@ export class CountryController {
                 throw new CountryQueryInvalidException();
             }
 
-            const countryViewModel = await this.countryService.getCountryByName(
+            const countryDto = await this.countryService.getCountryByName(
                 countryName,
             );
 
-            if (!countryViewModel) throw new NotFoundException();
+            if (!countryDto) throw new NotFoundException();
 
             const response: CountryGetOneResDto = {
-                countryData: countryViewModel,
-                createdAt: getResponseCreatedDateString(),
+                countryData: countryDto,
+                createdAt: getResponseCreatedAtString(),
                 id: getResponseId(),
             };
 
@@ -119,15 +118,15 @@ export class CountryController {
                 throw new CountryQueryInvalidException();
             }
 
-            const countryViewModel = await this.countryService.getCountryByCode(
+            const countryDto = await this.countryService.getCountryByCode(
                 countryCode,
             );
 
-            if (!countryViewModel) throw new NotFoundException();
+            if (!countryDto) throw new NotFoundException();
 
             const response: CountryGetOneResDto = {
-                countryData: countryViewModel,
-                createdAt: getResponseCreatedDateString(),
+                countryData: countryDto,
+                createdAt: getResponseCreatedAtString(),
                 id: getResponseId(),
             };
 
