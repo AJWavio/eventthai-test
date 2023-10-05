@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcrypt';
-import { USER_PWD_SALT } from 'src/_config/user.config';
 
 export async function getPasswordHash(password: string) {
     return await bcrypt.hash(password, 10);
