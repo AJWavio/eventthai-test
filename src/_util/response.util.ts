@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 
-export function getResponseCreatedDateString(date?: string | number): string {
+export function getResponseCreatedAtString(date?: string | number): string {
     if (date) return new Date(date).toISOString();
 
     return new Date().toISOString();

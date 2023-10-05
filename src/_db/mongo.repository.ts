@@ -1,10 +1,10 @@
 import { ReturnModelType, types } from '@typegoose/typegoose';
 import {
-    ClientSession,
     CreateOptions,
     FilterQuery,
     ProjectionType,
     QueryOptions,
+    SaveOptions,
     UpdateQuery,
 } from 'mongoose';
 
@@ -13,128 +13,111 @@ export abstract class MongoRepositoryBase<
 > {
     constructor(protected readonly model: ReturnModelType<Entity>) {}
 
-    async create(
-        country: InstanceType<Entity>,
-        options?: CreateOptions,
-        session?: ClientSession,
+    async createOne(
+        entity: InstanceType<Entity>,
+        toObject = false,
+        options?: SaveOptions,
     ): Promise<InstanceType<Entity> | null> {
-        const countryDoc = await this.model.create(
-            country,
-            options ? { ...options, session } : { session },
-        );
+        const entityDoc = new this.model(entity);
+        await entityDoc.save(options);
 
-        return countryDoc as InstanceType<Entity>;
+        if (!entityDoc) return null;
+
+        if (toObject) return entityDoc[0].toObject();
+
+        return entityDoc as InstanceType<Entity>;
     }
 
     async createMany(
-        country: InstanceType<Entity>[],
+        entity: InstanceType<Entity>[],
+        toObject = false,
         options?: CreateOptions,
-        session?: ClientSession,
     ): Promise<InstanceType<Entity>[] | null> {
-        const countryDoc = await this.model.create(
-            country,
-            options ? { ...options, session } : { session },
-        );
+        const entityDoc = await this.model.create(entity, options);
 
-        return countryDoc as InstanceType<Entity>[];
+        if (toObject)
+            return entityDoc.map(
+                (doc) => doc.toObject() as InstanceType<Entity>,
+            );
+
+        return entityDoc as InstanceType<Entity>[];
     }
 
     async updateOne(
         filter: FilterQuery<InstanceType<Entity>>,
         update: UpdateQuery<InstanceType<Entity>>,
         options?: QueryOptions<InstanceType<Entity>>,
-        session?: ClientSession,
     ): Promise<void> {
-        await this.model.updateOne(
-            filter,
-            update,
-            options
-                ? { ...options, session }
-                : {
-                    session,
-                },
-        );
+        await this.model.updateOne(filter, update, options);
     }
 
     async updateMany(
         filter: FilterQuery<InstanceType<Entity>>,
         update: UpdateQuery<InstanceType<Entity>>,
         options?: QueryOptions<InstanceType<Entity>>,
-        session?: ClientSession,
     ): Promise<void> {
-        await this.model.updateMany(
-            filter,
-            update,
-            options ? { ...options, session } : { session },
-        );
+        await this.model.updateMany(filter, update, options);
     }
 
     async findOne(
         filter: FilterQuery<InstanceType<Entity>>,
+        toObject = false,
         projection?: ProjectionType<InstanceType<Entity>>,
         options?: QueryOptions<InstanceType<Entity>>,
-        session?: ClientSession,
     ): Promise<InstanceType<Entity> | null> {
-        const countryDoc = await this.model.findOne(
-            filter,
-            projection,
-            options
-                ? { ...options, session }
-                : {
-                    session,
-                },
-        );
+        const entityDoc = await this.model.findOne(filter, projection, options);
 
-        return countryDoc as InstanceType<Entity>;
+        if (!entityDoc) return null;
+        if (toObject) return entityDoc.toObject();
+
+        return entityDoc as InstanceType<Entity>;
     }
 
     async findMany(
         filter: FilterQuery<InstanceType<Entity>>,
+        toObject = false,
         projection?: ProjectionType<InstanceType<Entity>>,
         options?: QueryOptions<InstanceType<Entity>>,
-        session?: ClientSession,
     ): Promise<InstanceType<Entity>[]> {
-        const countryDocList = await this.model.find(
+        const entityDocList = await this.model.find(
             filter,
             projection,
-            options ? { ...options, session } : { session },
+            options,
         );
 
-        return countryDocList as InstanceType<Entity>[];
+        if (toObject)
+            return entityDocList.map(
+                (doc) => doc.toObject() as InstanceType<Entity>,
+            );
+
+        return entityDocList as InstanceType<Entity>[];
     }
 
     async findAll(
+        toObject = false,
         options?: QueryOptions<InstanceType<Entity>>,
-        session?: ClientSession,
     ): Promise<InstanceType<Entity>[]> {
-        const countryDocList = await this.model.find(
-            null,
-            null,
-            options ? { ...options, session } : { session },
-        );
+        const entityDocList = await this.model.find(null, null, options);
 
-        return countryDocList as InstanceType<Entity>[];
+        if (toObject)
+            return entityDocList.map(
+                (doc) => doc.toObject() as InstanceType<Entity>,
+            );
+
+        return entityDocList as InstanceType<Entity>[];
     }
 
     async deleteOne(
         filter: FilterQuery<InstanceType<Entity>>,
         options?: QueryOptions<InstanceType<Entity>>,
-        session?: ClientSession,
     ): Promise<void> {
-        await this.model.deleteOne(
-            filter,
-            options ? { ...options, session } : { session },
-        );
+        await this.model.deleteOne(filter, options);
     }
 
     async deleteMany(
         filter: FilterQuery<InstanceType<Entity>>,
         options?: QueryOptions<InstanceType<Entity>>,
-        session?: ClientSession,
     ): Promise<void> {
-        await this.model.deleteMany(
-            filter,
-            options ? { ...options, session } : { session },
-        );
+        await this.model.deleteMany(filter, options);
     }
 }
