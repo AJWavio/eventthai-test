@@ -4,7 +4,7 @@ import {
     HttpException,
     InternalServerErrorException,
     NotFoundException,
-    Query,
+    Param,
 } from '@nestjs/common';
 import { CountryGetListResDto } from './dto/res/country.get-list.res.dto';
 import {
@@ -30,6 +30,7 @@ export class CountryController {
     @ApiOkResponse({
         type: CountryGetListResDto,
         status: 200,
+        description: 'Returns every country in database',
     })
     @ApiBadRequestResponse({
         status: 400,
@@ -58,6 +59,7 @@ export class CountryController {
     @ApiOkResponse({
         type: CountryGetOneResDto,
         status: 200,
+        description: 'Return country detail of given name',
     })
     @ApiBadRequestResponse({
         status: 400,
@@ -69,7 +71,7 @@ export class CountryController {
         status: 404,
     })
     async handleGetCountryByName(
-        @Query('name') countryName: string,
+        @Param('name') countryName: string,
     ): Promise<CountryGetOneResDto> {
         try {
             if (countryName == null) {
@@ -100,6 +102,7 @@ export class CountryController {
     @ApiOkResponse({
         type: CountryGetOneResDto,
         status: 200,
+        description: 'Return country detail of given code',
     })
     @ApiBadRequestResponse({
         status: 400,
@@ -111,7 +114,7 @@ export class CountryController {
         status: 404,
     })
     async handleGetCountryByCode(
-        @Query('code') countryCode: string,
+        @Param('code') countryCode: string,
     ): Promise<CountryGetOneResDto> {
         try {
             if (countryCode == null) {

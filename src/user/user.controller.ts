@@ -4,7 +4,6 @@ import {
     Get,
     HttpException,
     InternalServerErrorException,
-    NotImplementedException,
     Post,
     UseGuards,
     UsePipes,
@@ -25,7 +24,6 @@ import { JoiValidationPipe } from 'src/_pipe/joi-validation.pipe';
 import { userCreateValidationSchema } from './dto/req/user.create.req.validation';
 import { UserLoginResDto } from './dto/res/user.login.res.dto';
 import { userLoginValidationSchema } from './dto/req/user.login.req.validation';
-import { UserLoginDto } from './dto/user.dto';
 import { JwtAuthGuard } from 'src/_auth/jwt.guard';
 import { User } from 'src/_auth/user.decorator';
 import { UserSessionData } from 'src/_auth/user.session-data';
@@ -45,6 +43,7 @@ export class UserController {
     @ApiOkResponse({
         type: UserGetResDto,
         status: 200,
+        description: 'Return detail of the logged in user',
     })
     @ApiBadRequestResponse({
         status: 400,
@@ -82,6 +81,7 @@ export class UserController {
     @ApiOkResponse({
         type: UserGetAllResDto,
         status: 200,
+        description: 'Return detail of every user',
     })
     @ApiBadRequestResponse({
         status: 400,
@@ -115,6 +115,7 @@ export class UserController {
     @ApiOkResponse({
         type: UserCreateResDto,
         status: 200,
+        description: 'Return created user detail',
     })
     @ApiBadRequestResponse({
         status: 400,
@@ -149,6 +150,7 @@ export class UserController {
     @ApiOkResponse({
         type: UserLoginResDto,
         status: 200,
+        description: 'Return JWT token of the user',
     })
     @ApiBadRequestResponse({
         status: 400,
