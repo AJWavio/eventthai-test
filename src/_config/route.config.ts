@@ -4,6 +4,7 @@ const v1 = 'v1';
 
 const countryRoot = get('API_ROOT_COUNTRY').required().asString();
 const userRoot = get('API_ROOT_USER').required().asString();
+export const API_ROUTE_DOC = get('API_ROUTE_DOC').required().asString();
 
 export const routesV1 = {
     version: v1,

@@ -8,12 +8,21 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { initMongodbConnection } from './_db/db.connection-init';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { SERVER_PORT } from './_config/server.config';
+import { SERVER_IS_ENABLE_DOCS, SERVER_PORT } from './_config/server.config';
+import { API_ROUTE_DOC } from './_config/route.config';
 
 async function bootstrap() {
     await initMongodbConnection();
     const app = await NestFactory.create(AppModule);
 
+    if (SERVER_IS_ENABLE_DOCS) {
+        enableSwaggerDocumentation(app);
+    }
+
+    await app.listen(SERVER_PORT);
+}
+
+function enableSwaggerDocumentation(app) {
     const config = new DocumentBuilder()
         .setTitle('Eventpass Test')
         .addBearerAuth({
@@ -26,9 +35,7 @@ async function bootstrap() {
         })
         .build();
     const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('docs', app, document);
-
-    await app.listen(SERVER_PORT);
+    SwaggerModule.setup(API_ROUTE_DOC, app, document);
 }
 
 bootstrap();
