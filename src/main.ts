@@ -5,6 +5,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { initMongodbConnection } from './_db/db.connection-init';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SERVER_PORT } from './_config/server.config';
 
 async function bootstrap() {
     await initMongodbConnection();
@@ -24,7 +25,7 @@ async function bootstrap() {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('docs', app, document);
 
-    await app.listen(3000);
+    await app.listen(SERVER_PORT);
 }
 
 bootstrap();
