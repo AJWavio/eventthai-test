@@ -1,6 +1,4 @@
 import { get } from 'env-var';
-import * as dotenv from 'dotenv';
-dotenv.config();
 
 const v1 = 'v1';
 
@@ -11,11 +9,13 @@ export const routesV1 = {
     version: v1,
     country: {
         root: countryRoot,
-        getAll: countryRoot,
-        qeury: `/${countryRoot}/query`,
+        getAll: `${countryRoot}/all`,
+        queryName: `/${countryRoot}/:name`,
+        queryCode: `/${countryRoot}/code/:code`,
     },
     user: {
         root: userRoot,
+        getAll: `${userRoot}/all`,
         login: `/${userRoot}/login`,
     },
 };
